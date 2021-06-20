@@ -10,21 +10,31 @@ end;
 
 IsIsomorphicGroup := {G, H} -> IsomorphismGroups(G, H) <> fail;
 
-p := 3;
-ix := GroupFromPresentation(["P", "Q", "R"], {e, P, Q, R} -> [
-  [P^(p^2), e],
-  [Q^(p^2), e],
+p := 5;
+xv := GroupFromPresentation(["P", "Q", "R", "S"], {e, P, Q, R, S} -> [
+  [P^p, e],
+  [Q^p, e],
   [R^p, e],
-  [R^(-1) * P * R, P^(1+p)],
-  [P^(-1) * Q * P, Q],
-  [R^(-1) * Q * R, Q]
+  [S^p, e],
+  [Comm(R, S), Q],
+  [Comm(Q, S), P],
+  [Comm(P, S), e],
+  [Comm(Q, R), e],
+  [Comm(P, R), e],
+  [Comm(P, Q), e]
 ]);
 
-phi2_21 := GroupFromPresentation(["a", "a1", "a2"], {e, a, a1, a2} -> [
+phi3_1111 := GroupFromPresentation(["a", "a1", "a2", "a3"], {e, a, a1, a2, a3} -> [
   [Comm(a1, a), a2],
-  [a^p, a2],
-  [a1^p, e],
-  [a2^p, e],
-  [Comm(a, a2), e]
+  [Comm(a2, a), a3],
+  [a^p, e],
+  [a3^p, e],
+  [a1^p * a2^(Binomial(p, 2)) * a3^(Binomial(p, 3)), e],
+  [a2^p * a3^(Binomial(p, 3)), e],
+  [Comm(a, a3), e],
+  [Comm(a1, a2), e],
+  [Comm(a1, a3), e],
+  [Comm(a2, a3), e]
 ]);
-phi2_211a := DirectProduct(phi2_21, CyclicGroup(p));
+
+IsIsomorphicGroup(xv, phi3_1111);
